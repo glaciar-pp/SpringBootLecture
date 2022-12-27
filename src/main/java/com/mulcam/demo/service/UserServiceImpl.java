@@ -2,19 +2,24 @@ package com.mulcam.demo.service;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mulcam.demo.dao.UserDAO;
 import com.mulcam.demo.entity.User;
+import com.mulcam.demo.session.UserSession;
 
 @Service
 public class UserServiceImpl implements UserService {
+	@Resource
+	private UserSession userSession;
 
 	@Autowired
 	private UserDAO userDao;
-	
+
 	@Override
 	public List<User> getList() {
 		List<User> list = userDao.getList();
@@ -34,4 +39,33 @@ public class UserServiceImpl implements UserService {
 		userDao.insert(u);
 	}
 
+	@Override
+	public void update(User u) {
+		userDao.update(u);
+
+	}
+
+	@Override
+	public void delete(String uid) {
+		userDao.delete(uid);
+
+	}
+
+	@Override
+	public int login(String uid, String pwd) {
+		User u = userDao.get(uid);
+		if (u.getUid() != null) { // uid 가 존재
+			if (BCrypt.checkpw(pwd, u.getPwd())) {
+				// System.out.println(u.getUid() + ", " + u.getUname());
+				userSession.setUid(u.getUid());
+				userSession.setUname(u.getUname());
+				return UserService.CORRECT_LOGIN;
+			} else {
+				// 재 로그인 페이지
+				return UserService.WRONG_PASSWORD;
+			}
+		}
+		// 회원 가입 페이지로 안내
+		return UserService.UID_NOT_EXIST;
+	}
 }

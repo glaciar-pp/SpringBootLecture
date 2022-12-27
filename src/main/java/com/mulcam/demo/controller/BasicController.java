@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,8 +50,8 @@ public class BasicController {
 	public String basic4(@PathVariable int id) {
 		System.out.println("id: " + id);
 		return "redirect:/basic/basic" + id;
-		
 	}
+	
 	//기존의 방식
 	@RequestMapping("/basic5")
 	public String basic5(HttpServletRequest req) {
@@ -58,10 +59,12 @@ public class BasicController {
 		System.out.println("id: " + id);
 		return "redirect:/basic/basic" + id;
 	}
+	
+	//기존의 세션 사용방식도 사용 가능
+	@RequestMapping("/basic11")
+	public String basic11(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		session.setAttribute("uname", "톰");
+		return "redirect:/user/list";
+	}
 }
-
-
-
-
-
-
