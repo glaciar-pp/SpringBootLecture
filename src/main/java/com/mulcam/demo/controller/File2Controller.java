@@ -21,16 +21,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.mulcam.demo.entity.FileEntity;
 
 @Component
-@RequestMapping("/file")
+@RequestMapping("/file2")
 public class File2Controller {
-	
+
 	@GetMapping("/upload")
 	public String uploadForm() {
 		return "file/upload2";
@@ -43,10 +42,9 @@ public class File2Controller {
 		List<FileEntity> list = new ArrayList<>();
 		
 		for (MultipartFile file: files) {
-			FileEntity fe = new FileEntity(file.getOriginalFilename(),file.getContentType());
+			FileEntity fe = new FileEntity(file.getOriginalFilename(), file.getContentType());
 			list.add(fe);
 			
-			// 물리적 저장
 			File fileName = new File(file.getOriginalFilename());
 			try {
 				file.transferTo(fileName);
@@ -83,7 +81,3 @@ public class File2Controller {
 	}
 	
 }
-
-
-
-
