@@ -26,8 +26,8 @@ import com.mulcam.demo.service.CsvUtil;
 import com.mulcam.demo.service.MapUtil;
 
 @Controller
-@RequestMapping("/map")
-public class MapController {
+@RequestMapping("/htmap")
+public class HometownMapController {
 
 	@Value("${naver.accessId}") private String accessId;
 	@Value("${naver.secretKey}") private String secretKey;
@@ -143,8 +143,8 @@ public class MapController {
 	@ResponseBody
 	@GetMapping("/hotPlaces")
 	public String hotPlaces() throws Exception {
-		String[] hotPlaces = {"광진구청", "건국대학교", "세종대학교", "워커힐호텔"};
-		String filename = "c:/Temp/광진구명소.csv";
+		String[] hotPlaces = {"웨이브파크", "시흥시청", "시흥시청역", "송도 트리플스트리트", "송도컨벤시아"};
+		String filename = "c:/Temp/시흥&인천명소.csv";
 		MapUtil mu = new MapUtil();
 		
 		String output = "";
@@ -170,7 +170,7 @@ public class MapController {
 	@GetMapping("/hotPlaceResult")	
 	public String hotPlaceResult(Model model) throws Exception {
 		CsvUtil cu = new CsvUtil();
-		List<List<String>> dataList = cu.readCsv("c:/Temp/광진구명소.csv");
+		List<List<String>> dataList = cu.readCsv("c:/Temp/시흥&인천명소.csv");
 		String marker = "";
 		double lngSum = 0.0, latSum = 0.0;
 		// "type:t|size:tiny|pos:127.0824 37.5383|label:광진구청|color:red";
