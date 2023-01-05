@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>객체 탐지</title>
+</head>
+<body style="margin: 40px;">
+    <h3>객체 탐지 결과</h3>
+    <hr>
+    <canvas id="tcanvas" width="100" height="100"></canvas>
+    <script>
+        let jsonStr = '{"predictions": [{"num_detections": 11, "detection_classes": [1.0, 1.0, 2.0, 3.0, 3.0, 3.0, 1.0, 2.0, 1.0, 1.0, 3.0], "detection_names": ["person", "person", "bicycle", "car", "car", "car", "person", "bicycle", "person", "person", "car"], "detection_scores": [0.99883, 0.99788, 0.983313, 0.913521, 0.85043, 0.69999, 0.679982, 0.657357, 0.576355, 0.323677, 0.310215], "detection_boxes": [[0.429077, 0.0936808, 0.999302, 0.281285], [0.37261, 0.861897, 0.89555, 0.973816], [0.0390944, 0.384814, 0.426182, 0.805874], [0.354906, 0.109274, 0.984606, 0.951119], [0.624979, 0.00289915, 0.897547, 0.137056], [0.460883, 0.0215424, 0.949575, 0.587185], [0.531735, 0.517983, 0.635021, 0.560366], [0.0432096, 0.296765, 0.577632, 0.828586], [0.532941, 0.483536, 0.636727, 0.522693], [0.532076, 0.498054, 0.636891, 0.532078], [0.536875, 0.00269987, 0.895662, 0.484994]]}]}'
+        let obj = JSON.parse(jsonStr);
+        let prediction = obj.predictions[0];
+        let num = parseInt(prediction.num_detections)
+        let names = prediction.detection_names;
+        let scores = prediction.detection_scores;
+        let boxes = prediction.detection_boxes;
+
+        const canvas = document.getElementById('tcanvas');
+        let ctx = canvas.getContext("2d");
+        let img = new Image();
+        img.src = 'c:/Temp/YOLO_test1.jpg';
+        img.onload = function() {
+            console.log(img.width, ', ', img.height);
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+
+            ctx.strokeStyle = 'red';
+            ctx.linewidth = 2;
+            for (let i=0; i < num; i++) {
+                let x = boxes[i][1] * img.width;
+                let y = boxes[i][0] * img.height;
+                let w = (boxes[i][3] - boxes[i][1]) * img.width;
+                let h = boxes[i][0] - boxes[i][0] * img.height;
+                let label = names[i] + ' ('+ parseInt(scores[i] *100) + '%)';
+                ctx.strokeRect(x, y, w, h);
+                ctx.strokeText(label, x+5, y-5);
+            }
+
+        }
+    </script>    
+</body>
+</html>
+<!--
+'person'
+[0.429077, 0.0936808, 0.999302, 0.281285]
+0.99883
+-> person()
+
+w: 800, h: 500
+
+
+
+
+※detection_classes는 그다지 쓸모 없음. pass!
+ -->

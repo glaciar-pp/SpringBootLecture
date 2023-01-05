@@ -10,7 +10,7 @@ function tableData() {
     td1.append(audio);
 
     let input = document.createElement("input");
-    input.classList.add("btn", "btn-primary", "mr-2");
+    input.classList.add("btn", "btn-primary", "me-2");
     input.setAttribute('type', 'submit');
     input.setAttribute('value', '제출');
     td2.append(input);
@@ -52,7 +52,7 @@ if (navigator.mediaDevices) {
         mediaRecorder.onstop = e => {
             console.log("data available after MediaRecorder.stop() called.");
             const blob = new Blob(chunks, {
-                type: 'audio/wav codecs=opus'       //44100 Hz로 녹음됨
+                type: 'audio/wav codecs=opus'       // 44100 Hz 녹음이 됨
             });
 
             // 오디오 데이터 ajax
@@ -61,7 +61,7 @@ if (navigator.mediaDevices) {
 
             $.ajax({
                 type: "POST",
-                url: "/speech/audioupload",
+                url: "/speech/audioUpload",
                 data: formData,
                 contentType: false,
                 processData: false,

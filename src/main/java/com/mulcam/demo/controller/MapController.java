@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mulcam.demo.entity.StaticMap;
 import com.mulcam.demo.service.CsvUtil;
-import com.mulcam.demo.service.CsvUtilImpl;
 import com.mulcam.demo.service.MapUtil;
 
 @Controller

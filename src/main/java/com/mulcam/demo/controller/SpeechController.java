@@ -25,6 +25,11 @@ public class SpeechController {
 
 	@Value("${etriKey}") private String etriKey;
 	
+	@GetMapping("/audio")
+	public String audio() {
+		return "speech/audio";
+	}
+	
 	@ResponseBody
 	@GetMapping("/etri")
 	public String etri() throws Exception {
