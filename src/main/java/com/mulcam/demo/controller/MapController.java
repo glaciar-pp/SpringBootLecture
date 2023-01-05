@@ -12,6 +12,7 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,12 +24,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mulcam.demo.entity.StaticMap;
 import com.mulcam.demo.service.CsvUtil;
+import com.mulcam.demo.service.CsvUtilImpl;
 import com.mulcam.demo.service.MapUtil;
 
 @Controller
 @RequestMapping("/map")
 public class MapController {
-
+	
+	@Autowired  private CsvUtil csvUtil;
 	@Value("${naver.accessId}") private String accessId;
 	@Value("${naver.secretKey}") private String secretKey;
 	@Value("${roadAddrKey}") private String roadAddrKey;
@@ -140,11 +143,10 @@ public class MapController {
 		return "경도: " + lng + ", 위도: " + lat;
 	}
 	
-	@ResponseBody
 	@GetMapping("/hotPlaces")
 	public String hotPlaces() throws Exception {
-		String[] hotPlaces = {"광진구청", "건국대학교", "세종대학교", "워커힐호텔"};
-		String filename = "c:/Temp/광진구명소.csv";
+		String[] hotPlaces = {"웨이브파크", "시흥시청", "갯골생태공원", "송도 트리플스트리트", "송도컨벤시아"};
+		String filename = "c:/Temp/시흥&인천명소.csv";
 		MapUtil mu = new MapUtil();
 		
 		String output = "";
@@ -161,38 +163,38 @@ public class MapController {
 			dataList.add(row);
 		}
 		
-		CsvUtil cu = new CsvUtil();
-		cu.writeCsv(filename, dataList);
-		return output;
+		// CsvUtil2 cu = new CsvUtil2();
+		csvUtil.writeCsv(filename, dataList);
+		return "redirect:/map/hotPlacesResult";
 	}
 	
-	//명소를 보여줄때 해당 장소들의 평균 좌표를 만들어 그 기준점으로 보여준다!
-	@GetMapping("/hotPlaceResult")	
-	public String hotPlaceResult(Model model) throws Exception {
-		CsvUtil cu = new CsvUtil();
-		List<List<String>> dataList = cu.readCsv("c:/Temp/광진구명소.csv");
+	@GetMapping("/hotPlacesResult")
+	public String hotPlacesResult(Model model) throws Exception {
+		// CsvUtil2 cu = new CsvUtil2();
+		List<List<String>> dataList = csvUtil.readCsv("c:/Temp/시흥&인천명소.csv");
 		String marker = "";
 		double lngSum = 0.0, latSum = 0.0;
-		// "type:t|size:tiny|pos:127.0824 37.5383|label:광진구청|color:red";
-		for (List<String> list : dataList) {
+		// "type:t|size:tiny|pos:127.0824 37.5383|label:광진구청|color:red"
+		// Marker
+		for (List<String> list: dataList) {
 			double lng = Double.parseDouble(list.get(2));
 			double lat = Double.parseDouble(list.get(3));
-			lngSum += lng;
-			latSum += lat; // 좌표 추가
-			marker += "&markers=" + "type:t|size:tiny|pos:" + lng + "%20" + lat + "|label:"
-					+ URLEncoder.encode(list.get(0), "utf-8") + "|color:red";
+			lngSum += lng; latSum += lat;
+			marker += "&markers=type:t|size:tiny|pos:" + lng + "%20" + lat + "|label:"
+					+ URLEncoder.encode(list.get(0), "utf-8") + "|color: green";
 		}
 		double lngCenter = lngSum / dataList.size();
 		double latCenter = latSum / dataList.size();
+		
 		String url = "https://naveropenapi.apigw.ntruss.com/map-static/v2/raster"
-				+ "?w=" + 600 + "&h=" + 400 
-				+ "&center=" + lngCenter + "," + latCenter 
-				+ "&level=" + 12 + "&scale=" + 2
-				+ "&X-NCP-APIGW-API-KEY-ID=" + accessId 
+				+ "?w=" + 600 + "&h=" + 400
+				+ "&center=" + lngCenter + "," + latCenter
+				+ "&level=" + 11 + "&scale=" + 2
+				+ "&X-NCP-APIGW-API-KEY-ID=" + accessId
 				+ "&X-NCP-APIGW-API-KEY=" + secretKey;
-
-		model.addAttribute("url", url + marker);
+		
+		model.addAttribute("url", url+marker);
 		return "map/staticResult";
 	}
-
+	
 }
