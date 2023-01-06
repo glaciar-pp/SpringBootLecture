@@ -18,6 +18,7 @@
     <h3>음성 인식(녹음)</h3>
     <hr>
     <form action="/speech/etri" method="post">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" method="post"/>
         <table class="table table-borderless">
             <tr>
                 <td>언어 선택</td>

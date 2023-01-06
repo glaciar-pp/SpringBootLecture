@@ -65,12 +65,16 @@ if (navigator.mediaDevices) {
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend : function(xhr){	//보안토큰 비활성화
+					xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+				},	
                 success: function(result) {
                     console.log("success");
                 },
                 error: function(result) {
                     alert("failed");
-                }
+                
+				}
             })
             const audioURL = URL.createObjectURL(blob);
             audio.src = audioURL

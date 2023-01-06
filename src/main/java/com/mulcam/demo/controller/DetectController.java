@@ -103,7 +103,7 @@ public class DetectController {
 		return "detect/naverResult";
 	}
 	
-	@ResponseBody
+	
 	@GetMapping("/etri")
 	public String etri() throws Exception {
 		String openApiURL = "http://aiopen.etri.re.kr:8000/ObjectDetect";

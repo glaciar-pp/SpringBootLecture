@@ -53,7 +53,7 @@ public class Crawling {
 		List<Genie> list = new ArrayList<>();
 		// 페이지에 대한 Loop
 		for (int i = 1; i <= 4; i++) {
-			String url = "https://genie.co.kr/chart/top200?ditc=D&ymd=" + ymd
+			String url = "https://www.genie.co.kr/chart/top200?ditc=D&ymd=" + ymd
 						+ "&hh" + hh + "&rtm=y&pg" + i;
 
 			Document doc = Jsoup.connect(url).get();

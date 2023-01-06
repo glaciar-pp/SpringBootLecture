@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 
 @Controller
 @RequestMapping("/speech")
+
 public class SpeechController {
 
 	@Value("${etriKey}") private String etriKey;
@@ -36,7 +37,8 @@ public class SpeechController {
 		String openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/Recognition";
         String accessKey = etriKey;    // 발급받은 API Key
         String languageCode = "korean";     // 언어 코드
-        String audioFilePath = "/Temp/hello.wav";  // 녹음된 음성 파일 경로
+        String audioFilePath = "/Temp/Recognition";  // 녹음된 음성 파일 경로
+        String audioContents = null;
  
         Gson gson = new Gson();
         
@@ -45,7 +47,7 @@ public class SpeechController {
  
         Path path = Paths.get(audioFilePath);
         byte[] audioBytes = Files.readAllBytes(path);
-        String audioContents = Base64.getEncoder().encodeToString(audioBytes);
+        audioContents = Base64.getEncoder().encodeToString(audioBytes);
         
         // POST data/parameter 전송
         argument.put("language_code", languageCode);
@@ -69,7 +71,11 @@ public class SpeechController {
         byte[] buffer = new byte[is.available()];
         int byteRead = is.read(buffer);
         String responBody = new String(buffer);
-
+        
+        System.out.println("[responseCode] " + responseCode);
+        System.out.println("[responBody]");
+        System.out.println(responBody);
+        
         String data = "[responseCode] " + responseCode + "<br>"
         			+ "[responBody]" + "<br>"
         			+ responBody;
